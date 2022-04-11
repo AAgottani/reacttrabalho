@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useNavigate } from 'react-router-dom';
 import firebase from '../Firebase';
 import { useState } from 'react'; 
 
@@ -9,20 +9,36 @@ import { useState } from 'react';
 
 function Login(){
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [nome, setNome] = useState('');
+  const [sobrenome, setSobrenome] = useState('');
+  const [nascimento, setNascimento] = useState('');
+  
+   
+  let navigate=useNavigate();
  
   const logar = () => {
     console.log("apertou")
-    firebase.auth().signInWithEmailAndPassword(email, password).then(user => {
-      console.log(user)
-
-    var dados=firebase.firestore().collection("user").get();
+  
     
+    firebase.auth().signInWithEmailAndPassword(email, password).then(user => {
+      
+      firebase.auth().onAuthStateChanged(user => {
+        if (user != null) {
+          console.log("entrou")
+          navigate("../", { replace: true });
+          
+        }
+      })
 
     })
+    
+      
+    
 
   }
 
